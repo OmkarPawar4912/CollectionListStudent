@@ -11,7 +11,7 @@ namespace CollectionListConsole
 
         public static void Main()
         {
-            Program.Menu(); // Display Menu
+           Menu(); // Display Menu
         }
         public static void Chose(int n)
         { 
@@ -21,14 +21,13 @@ namespace CollectionListConsole
                     Student.Add();
                     break;
                 case 2:
-
                     Student.View();
                     break;
                 case 3:
-                    Student.FindOrDelete();
+                    Student.Total();
                     break;
                 case 4:
-                    Student.Total();
+                    Student.FindOrDelete();                    
                     break;
                 case 5:
                     Environment.Exit(0); // For exit
@@ -46,15 +45,16 @@ namespace CollectionListConsole
                 Console.WriteLine("===================================================================");
                 Console.WriteLine(" 1 - Add Student ");
                 Console.WriteLine(" 2 - View Student ");
-                Console.WriteLine(" 3 - Find or Delete Student ");
-                Console.WriteLine(" 4 - Exit");
+                Console.WriteLine(" 3 - Total Student ");
+                Console.WriteLine(" 4 - Find or Delete Student ");
+                Console.WriteLine(" 5 - Exit");
                 Console.WriteLine("Enter Your option");
                 
                 int option = int.Parse(Console.ReadLine());
                 
-                if (option > 0 && option < 5)
+                if (option > 0 && option < 6)
                 {
-                    Program.Chose(option);
+                   Chose(option);
                 }
                 else
                 {
@@ -75,49 +75,60 @@ namespace CollectionListConsole
             {
 
                 Console.WriteLine("Enter Total Student : ");
-                int total = int.Parse(Console.ReadLine());
-                do
+                //int total = int.Parse(Console.ReadLine());
+                bool parseSuccess = int.TryParse(Console.ReadLine(), out int total);
+                if (parseSuccess)
                 {
-                    //For Auto Genrated Roll No
-                    int rn;
-                    if(Total()==0)
+                    do
                     {
-                        rn =1;
-                    }
-                    else
-                    {
-                        rn = Total() + 1;
-                    }
+                        //For Auto Genrated Roll No
+                        int rn;
+                        if (Total() == 0)
+                        {
+                            rn = 1;
+                        }
+                        else
+                        {
+                            rn = Total() + 1;
+                        }
 
-                    Console.WriteLine("-----------------------------------------------------------------------------");
-                    
-                    Console.Write("Student Roll No  : {0} \n",rn);
-                  
-                    Console.Write("Enter Student Name     : ");
-                    string name = Console.ReadLine();
+                        Console.WriteLine("-----------------------------------------------------------------------------");
 
-                    Console.Write("Enter Student Subject  : ");
-                    string subName = Console.ReadLine();
+                        Console.Write("Student Roll No  : {0} \n", rn);
 
-                    Student student = new Student()
-                    {
-                        Name = name,
-                        RollNo = rn,
-                        SubName = subName
-                    };
+                        Console.Write("Enter Student Name     : ");
+                        string name = Console.ReadLine();
 
-                    if (total % 2 == 0)
-                    {
-                        Division1.Add(student);
-                        total--;
-                    }
-                    else
-                    {
-                        Division2.Add(student);
-                        total--;
-                    }
+                        Console.Write("Enter Student Subject  : ");
+                        string subName = Console.ReadLine();
 
-                } while (total > 0);
+                        Student student = new Student()
+                        {
+                            Name = name,
+                            RollNo = rn,
+                            SubName = subName
+                        };
+
+                        if (total % 2 == 0)
+                        {
+                            Division1.Add(student);
+                            total--;
+                        }
+                        else
+                        {
+                            Division2.Add(student);
+                            total--;
+                        }
+
+                    } while (total > 0);
+
+                    View(); //Display Records
+                }
+                else
+                {
+                    Menu();
+                }
+
             }
 
             //All Student List
@@ -180,23 +191,25 @@ namespace CollectionListConsole
                 Console.Write("Enter Division (1 or 2): ");
                 int division = int.Parse(Console.ReadLine());
                 
-                Console.Write("Enter Roll No : ");
-                int rollno = int.Parse(Console.ReadLine());
-                
-                FindStudent(division, rollno);
-                Console.WriteLine("Do you want to delete or edit this Student( D = delete | N = Exit) ? ");
-                
-                if ("D" == Console.ReadLine().ToUpper())
+                if (division == 1 || division == 2)
                 {
-                    Division1.RemoveAll(x => x.RollNo == rollno);
-                    Division2.RemoveAll(x => x.RollNo == rollno);
-                }
-                else
-                {
-                    Console.WriteLine("You cancel Process !!! ");
-                }
+                    Console.Write("Enter Roll No : ");
+                    int rollno = int.Parse(Console.ReadLine());
+                    FindStudent(division, rollno);
+                    Console.WriteLine("Do you want to delete or edit this Student( D = delete | N = Exit) ? ");
 
-                View();
+                    if ("D" == Console.ReadLine().ToUpper())
+                    {
+                        Division1.RemoveAll(x => x.RollNo == rollno);
+                        Division2.RemoveAll(x => x.RollNo == rollno);
+                    }
+                    else
+                    {
+                        Console.WriteLine("You cancel Process !!! ");
+                    }
+                    View();
+                }
+                Console.WriteLine("Enter Correct Division !!!");
             }
         }
     }
